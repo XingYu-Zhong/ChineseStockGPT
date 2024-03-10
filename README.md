@@ -14,7 +14,7 @@ ChineseStockGPT是一个创新的对话式人工智能系统，专门设计用�
 - [特性](#特性)
 - [故障排除](#故障排除)
 - [贡献者](#贡献者)
-- [Star History](#Star History)
+- [StarHistory](#StarHistory)
 
 ## 安装
 在开始之前，请确保你有访问OpenAI API的必要权限。按照以下步骤设置ChineseStockGPT：
@@ -58,7 +58,7 @@ ChineseStockGPT是一个创新的对话式人工智能系统，专门设计用�
   <img src="https://contrib.rocks/image?repo=XingYu-Zhong/ChineseStockGPT" />
 </a>
 
-## 🌟Star History
+## StarHistory
 <picture>
   <source
     media="(prefers-color-scheme: dark)"
