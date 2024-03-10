@@ -1,0 +1,739 @@
+openapi: 3.5.1
+info:
+  title: StockMarketAssistant Plugin
+  description: Plugin for accessing stock related data, you can access stock history data, news data, performance data, data called by institutions, etc.
+  version: 'v1'
+servers:
+  - url: http://localhost:5003
+paths:
+  # /zh_stock_basic:
+  #   get:
+  #     operationId: serve_zh_stock_basic
+  #     summary: 获取中国股票的基础信息数据，包括股票代码,名称,上市日期,地域,所属行业,股票全称,英文全称,拼音缩写，退市日期等
+  #     parameters:
+  #       - name: text
+  #         in: query
+  #         description: 要搜索股票基础信息数据的标志，可以是代码或者名称或者全称，或者英文全称或者拼音缩写
+  #         required: true
+  #         schema:
+  #           type: string
+
+  #     responses:
+  #       "200":
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/serve_zh_stock_basic'
+  /zh_stock_history_data:
+    get:
+      operationId: serve_zh_stock_history_data
+      summary: 获取中国股票的历史数据,要去serve_zh_stock_basic里获取symbol,必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,振幅,涨跌幅,涨跌额,换手率等,start_date到end_date的时间超过一月period参数默认使用'weekly',超过一年period参数默认使用'monthly'
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: 要搜索股票历史数据的时间类型,choice of {'daily', 'weekly', 'monthly'},只能是这三个中的一个,start_date到end_date的时间超过一月period参数默认使用'weekly',超过一年period参数默认使用'monthly'
+          required: true
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: 要搜索股票历史数据的开始查询的日期,不能是进两天的日期，格式是‘YYYYmmdd’,比如start_date='20210301'
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: 要搜索股票历史数据的结束查询的日期,格式是‘YYYYmmdd’,end_date='20210301'
+          required: true
+          schema:
+            type: string
+        - name: adjust
+          in: query
+          description: 需要复权数据类型,默认返回不复权的数据,qfq返回前复权后的数据,hfq返回后复权后的数据,choice of {'qfq', 'hfq' , ''},只能是这三个中的一个
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serve_zh_stock_history_data'
+  /zh_stock_yjbb_em_data:
+    get:
+      operationId: serve_zh_stock_yjbb_em_data
+      summary: 在需要公司的业绩数据时调用,可以获取中国公司股票的业绩报告数据,包括每股收益,营业收入-营业收入,营业收入-同比增长,营业收入-季度环比增长,净利润-净利润,净利润-同比增长,净利润-季度环比增长,每股净资产,净资产收益率,每股经营现金流量,销售毛利率,所处行业,最新公告日期
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: 先获取当前日期,要搜索股票历史数据的开始查询的日期,格式是‘YYYYmmdd’,比如date="20200331", choice of {"XXXX0331", "XXXX0630", "XXXX0930", "XXXX1231"}; 从 20100331 开始,不能超过当前日期
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_news_em_data:
+    get:
+      operationId: serve_zh_stock_news_em_data
+      summary: 获取中国股票最近的个股新闻数据,包括新闻标题,新闻内容,发布时间,文章来源
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 要搜索股票新闻历史数据前多少条数据,全部数据是不超过100条的
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_jgdy_tj_em_data:
+    get:
+      operationId: serve_zh_stock_jgdy_tj_em_data
+      summary: 获取近期机构调研的数据,包括代码,名称,涨跌幅,接待机构数量,接待方式,接待人员,接待地点,接待日期,公告日期,每次最多只能获取50条数据
+      parameters:
+        - name: date
+          in: query
+          description: 要搜索数据的开始查询的日期,要是没有数据可以试试日期在早点,格式是‘YYYY-mm-dd’,比如date="2018-09-28",
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 要搜索前多少条数据，最多20条
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serve_zh_stock_jgdy_tj_em_data'
+  /zh_fund_report_stock_cninfo_data:
+    get:
+      operationId: serve_zh_fund_report_stock_cninfo_data
+      summary: 查看股票是否为基金季度重仓股,如果没有数据说明没有基金重仓这个股票,如果有数据，则包括序号,股票代码,股票简称,报告期,基金覆盖家数,持股总数,持股总市值
+      parameters:
+        - name: date
+          in: query
+          description:  先获取当前日期,要搜索股票历史数据的开始查询的日期,格式是‘YYYYmmdd’,比如date="20200331", choice of {"XXXX0331", "XXXX0630", "XXXX0930", "XXXX1231"}; 从 20170331 开始,不能超过当前日期
+          required: true
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serve_zh_fund_report_stock_cninfo_data'
+  /zh_macro_china_data:
+    get:
+      operationId: serve_zh_macro_china_data
+      summary: 获取中国宏观经济数据，包括企业商品价格总指数-指数值，企业商品价格总指数-同比增长，企业商品价格总指数-环比增长，农产品-指数值，农产品-同比增长，农产品-环比增长，矿产品-指数值，矿产品-同比增长，矿产品-环比增长，煤油电-指数值，煤油电-同比增长，煤油电-环比增长，还有外商直接投资数据，包括当月，当月-同比增长，当月-环比增长，累计，累计-同比增长，还有社会融资规模增量统计，包括社会融资规模增量等等，如果没有数据，需要将开始日期调前一些
+      parameters:
+        - name: start_date
+          in: query
+          description: 先获取当前日期,要搜索历史中国宏观数据的开始查询的日期,格式是‘YYYYmm’,比如date="202003"从201501开始,到当前月份的前三个月
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: 要搜索历史中国宏观数据的结束查询的日期,格式是‘YYYYmm’,比如date="202003"从201501开始
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serve_zh_macro_china_data'
+  /zh_stock_zh_a_hist_min_em_data:
+    get:
+      operationId: serve_zh_stock_zh_a_hist_min_em_data
+      summary: 获取中国股票的历史分时数据,要去serve_zh_stock_basic里获取symbol,必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,最新价等,start_date到end_date的时间不能超过一天
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,要去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: 要搜索股票历史数据的时间类型,period='5'; choice of {'1', '5', '15', '30', '60'}; 其中 1 分钟数据返回近 5 个交易日数据且不复权
+          required: true
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: 要搜索股票历史分时数据的开始查询的时间,格式是‘YYYY-MM-dd hh:mm:ss’,比如start_date="1979-09-01 09:32:00";先获取当前时间，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: 要搜索股票历史分时数据的结束查询的时间,格式是‘YYYY-MM-dd hh:mm:ss’,比如end_date="1979-09-01 09:32:00";先获取当前时间，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+        - name: adjust
+          in: query
+          description: 需要复权数据类型,默认返回不复权的数据,qfq返回前复权后的数据,hfq返回后复权后的数据,choice of {'qfq', 'hfq' , ''},只能是这三个中的一个
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serve_zh_stock_zh_a_hist_min_em_data'
+  /zh_stock_sse_summary_data:
+    get:
+      operationId: serve_zh_stock_sse_summary_data
+      summary: 获取最近日期的中国股票的股票市场总貌,(当前交易日的数据需要交易所收盘后统计)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_szse_summary_data:
+    get:
+      operationId: serve_zh_stock_szse_summary_data
+      summary: 获取中国股票的市场总貌数据-证券类别统计有股票，基金，债券，期权等等,(当前交易日的数据需要交易所收盘后统计)
+      parameters:
+        - name: date
+          in: query
+          description: 要搜索中国股票的市场总貌数据的开始查询的日期,格式是‘YYYYmmdd’,比如start_date='20210301' 当前交易日的数据需要交易所收盘后统计
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_board_industry_name_em_data:
+    post:
+      operationId: serve_zh_stock_board_industry_name_em_data
+      summary: 获取具体的中国股票的行业板块数据,输入参数symbol获取单个行业的数据，输入start_rank和end_rank参数获取当前排名范围的数据，
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索具体的中国股票的当前行业板块数据的行业名称，要去serve_stock_board_industry_name_em_list_data找到近似的行业板块名称
+          schema:
+            type: string
+        - name: start_rank
+          in: query
+          description: 要搜索中国股票的当前行业板块数据的起始排名,不能超过86，因为一共就86个行业
+          schema:
+            type: string
+        - name: end_rank
+          in: query
+          description: 要搜索中国股票的当前行业板块数据的结束排名,不能超过86，因为一共就86个行业
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+    get:
+      operationId: serve_stock_board_industry_name_em_list_data
+      summary: 获取具体的中国股票的行业名称列表数据，包括行业板块名称列表
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_board_concept_name_em_data:
+    get:
+      operationId: serve_zh_stock_board_concept_name_em_data
+      summary: 获取中国股票的当前时刻排名第几概念板块数据,一共422个概念板块
+      parameters:
+        - name: start_rank
+          in: query
+          description: 要搜索中国股票的当前行业板块数据的起始排名,不能超过86，因为一共就86个行业
+          required: true
+          schema:
+            type: string
+        - name: end_rank
+          in: query
+          description: 要搜索中国股票的当前行业板块数据的结束排名,不能超过86，因为一共就86个行业
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_hot_tgb_data:
+    get:
+      operationId: serve_zh_stock_hot_tgb_data
+      summary: 获取中国股票当前淘股吧里的热门股票,单次返回排名前 20 股票
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_hot_rank_em_data:
+    get:
+      operationId: serve_zh_stock_hot_rank_em_data
+      summary: 获取中国股票当前东方财富网站的热门股票,单次返回排名前 100 股票
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_individual_fund_flow_rank_data:
+    get:
+      operationId: serve_zh_stock_individual_fund_flow_rank_data
+      summary: 获取中国股票的个股资金流排名数据,包括主力流入资金,超大单净流入,大单流入资金,中单净流入,小单净流入等数据
+      parameters:
+        - name: symbol
+          in: query
+          description: 要搜索股票代码symbol,要去serve_zh_stock_basic里获取symbol,必须是纯数字
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: 是获取什么时期统计的,默认是当天的,period="今日"; choice {"今日", "3日", "5日", "10日"}
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_market_fund_flow_data:
+    get:
+      operationId: serve_zh_stock_market_fund_flow_data
+      summary: 获取中国股票的大盘资金流向最近数据,仅能查询最近三个月的数据,包括主力流入资金,超大单净流入,大单流入资金,中单净流入,小单净流入等数据，查询开始时间到结束时间不能超过一个月
+      parameters:
+        - name: start_date
+          in: query
+          description: 要搜索股票大盘资金流向最近数据的开始查询的时间,格式是‘YYYY-MM-dd’,比如start_date="2023-02-20";先获取当前时间，从最近三个月开始，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: 要搜索股票大盘资金流向最近数据的结束查询的时间,格式是‘YYYY-MM-dd’,end_date="2023-02-20";先获取当前时间，从最近三个月开始，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_sector_fund_flow_rank_data:
+    get:
+      operationId: serve_zh_stock_sector_fund_flow_rank_data
+      summary: 获取中国股票的指定板块的指定期限的资金流排名数据,包括主力流入资金,超大单净流入,大单流入资金,中单净流入,小单净流入等数据
+      parameters:
+        - name: sector_type
+          in: query
+          description: 选择要获取的板块默认sector_type="行业资金流";choice of {"行业资金流", "概念资金流","地域资金流"}
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: 是获取什么时期统计的,默认是当天的,period="今日"; choice {"今日", "3日", "5日", "10日"}
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+
+  /zh_stock_sector_fund_flow_summary_data:
+    get:
+      operationId: serve_zh_stock_sector_fund_flow_summary_data
+      summary: 获取中国股票的指定行业的个股资金流数据,包括股票代码,主力流入资金,超大单净流入,大单流入资金,中单净流入,小单净流入等数据
+      parameters:
+        - name: sector_type
+          in: query
+          description: 输入行业名称，要去serve_stock_board_industry_name_em_list_data找到近似的行业板块名称
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: 是获取什么时期统计的,默认是当天的,period="今日"; choice {"今日", "5日", "10日"}
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+  /zh_stock_sector_fund_flow_hist_data:
+    get:
+      operationId: serve_zh_stock_sector_fund_flow_hist_data
+      summary: 获取中国股票的取指定行业的行业历史资金流数据,仅能查询最近三个月的数据,包括主力流入资金,超大单净流入,大单流入资金,中单净流入,小单净流入等数据，查询开始时间到结束时间不能超过一个月
+      parameters:
+        - name: sector_type
+          in: query
+          description: 输入行业名称，要去serve_stock_board_industry_name_em_list_data找到近似的行业板块名称
+          required: true
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: 要搜索股票大盘资金流向最近数据的开始查询的时间,格式是‘YYYY-MM-dd’,比如start_date="2023-02-20";先获取当前时间，从最近三个月开始，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: 要搜索股票大盘资金流向最近数据的结束查询的时间,格式是‘YYYY-MM-dd’,end_date="2023-02-20";先获取当前时间，从最近三个月开始，不能超过当前的时间
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data'
+components:
+  schemas:
+    data:
+      type: string
+      description: 需要获取的数据，格式为json
+    serve_zh_stock_zh_a_hist_min_em_data:
+      type: array
+      items:
+        properties:
+          type: object
+          时间:
+            type: string
+            description: 交易时间
+          开盘:
+            type: number
+            description: 开盘价
+          收盘:
+            type: number
+            description: 收盘价
+          最高:
+            type: number
+            description: 最高价
+          最低:
+            type: number
+            description: 最低价
+          成交量:
+            type: integer
+            description: 成交量，注意单位是手
+          成交额:
+            type: number
+            description: 成交额，注意单位是元
+          振幅:
+            type: number
+            description: 振幅，注意单位是%
+          涨跌幅:
+            type: number
+            description: 涨跌幅，注意单位是%
+          涨跌额:
+            type: number
+            description: 涨跌额的，注意单位是元
+          换手率:
+            type: number
+            description: 换手率，注意单位是%
+          最新价:
+            type: number
+            description: 最新价，注意单位是%
+    serve_zh_macro_china_data:
+      type: array
+      items:
+        properties:
+          type: object
+          月份:
+            type: string
+            description: 月份
+          总指数-指数值:
+            type: number
+            description: 企业商品价格总指数-指数值
+          总指数-同比增长:
+            type: number
+            description: 企业商品价格总指数-同比增长 注意单位 %
+          总指数-环比增长:
+            type: number
+            description: 企业商品价格总指数-环比增长 注意单位 %
+          农产品-指数值:
+            type: number
+            description: 企业商品价格农产品-指数值
+          农产品-同比增长:
+            type: number
+            description: 企业商品价格总指数-指数值 注意单位 %
+          农产品-环比增长:
+            type: number
+            description: 企业商品价格农产品-环比增长 注意单位 %
+          矿产品-指数值:
+            type: number
+            description: 企业商品价格矿产品-指数值
+          矿产品-同比增长:
+            type: number
+            description: 企业商品价格矿产品-同比增长 注意单位 %
+          矿产品-环比增长:
+            type: number
+            description: 企业商品价格矿产品-环比增长 注意单位 %
+          煤油电-指数值:
+            type: number
+            description: 企业商品价格煤油电-指数值
+          煤油电-同比增长:
+            type: number
+            description: 企业商品价格煤油电-同比增长 注意单位 %
+          煤油电-环比增长:
+            type: number
+            description: 企业商品价格矿煤油电-环比增长 注意单位 %
+          当月:
+            type: integer
+            description: 当月外商直接投资数据
+          当月-同比增长:
+            type: number
+            description: 当月同比增长外商直接投资数据 注意单位 美元
+          当月-环比增长:
+            type: number
+            description: 当月环比增长外商直接投资数据 注意单位 %
+          累计:
+            type: number
+            description: 累计外商直接投资数据 注意单位 美元
+          累计-同比增长:
+            type: number
+            description: 累计同比增长外商直接投资数据 注意单位 %
+          社会融资规模增量:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量 注意单位 折合人民币, 亿元
+          其中-人民币贷款:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-人民币贷款 注意单位 折合人民币, 亿元
+          其中-委托贷款外币贷款:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-委托贷款外币贷款 注意单位 折合人民币, 亿元
+          其中-委托贷款:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-委托贷款 注意单位 折合人民币, 亿元
+          其中-信托贷款:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-信托贷款 注意单位 折合人民币, 亿元
+          其中-未贴现银行承兑汇票:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-未贴现银行承兑汇票 注意单位 折合人民币, 亿元
+          其中-企业债券:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-企业债券 注意单位 折合人民币, 亿元
+          其中-非金融企业境内股票融资:
+            type: number
+            description: 社会融资规模增量统计 社会融资规模增量其中-非金融企业境内股票融资 注意单位 折合人民币, 亿元
+    serve_zh_fund_report_stock_cninfo_data:
+      type: array
+      items:
+        properties:
+          type: object
+          序号:
+            type: integer
+            description: 序号
+          股票代码:
+            type: string
+            description: 股票代码
+          股票简称:
+            type: string
+            description: 股票简称
+          报告期:
+            type: string
+            description: 报告期
+          基金覆盖家数:
+            type: integer
+            description: 基金覆盖家数
+          持股总数:
+            type: integer
+            description: 持股总数
+          持股总市值:
+            type: integer
+            description: 持股总市值
+    serve_zh_stock_jgdy_tj_em_data:
+      type: array
+      items:
+        properties:
+          type: object
+          序号:
+            type: integer
+            description: 序号
+          代码:
+            type: string
+            description: 被机构调研公司代码
+          名称:
+            type: string
+            description: 被机构调研公司名称
+          最新价:
+            type: number
+            description: 被机构调研公司最新价
+          涨跌幅:
+            type: number
+            description: 被机构调研公司涨跌幅,注意单位是%
+          接待机构数量:
+            type: integer
+            description: 被机构调研公司接待机构数量
+          接待方式:
+            type: string
+            description: 被机构调研公司接待方式
+          接待人员:
+            type: string
+            description: 被机构调研公司接待人员
+          接待地点:
+            type: string
+            description: 被机构调研公司接待地点
+          接待日期:
+            type: string
+            description: 被机构调研公司接待日期,时间戳类型
+          公告日期:
+            type: string
+            description: 被机构调研公司公告日期,时间戳类型
+    serve_zh_stock_basic:
+      type: array
+      items:
+        properties:
+          type: object
+          symbol:
+            type: string
+            description: 股票代码的列表
+          name:
+            type: string
+            description: 股票名称的列表
+          area:
+            type: string
+            description: 地域的列表
+          industry:
+            type: string
+            description: 所属行业的列表
+          fullname:
+            type: string
+            description: 股票全称的列表
+          enname:
+            type: string
+            description: 英文全称的列表
+          cnspell:
+            type: string
+            description: 拼音缩写的列表
+          exchange:
+            type: string
+            description: 交易所代码的列表
+          list_status:
+            type: string
+            description: 上市状态的列表  （L上市 D退市 P暂停上市）
+          list_date:
+            type: string
+            description: 上市日期的列表
+          delist_date:
+            type: string
+            description: 退市日期的列表
+    serve_zh_stock_history_data:
+      type: array
+      items:
+        properties:
+          type: object
+          日期:
+            type: string
+            description: 交易日的列表
+          开盘:
+            type: number
+            description: 开盘价的列表
+          收盘:
+            type: number
+            description: 收盘价的列表
+          最高:
+            type: number
+            description: 最高价的列表
+          最低:
+            type: number
+            description: 最低价的列表
+          成交量:
+            type: integer
+            description: 成交量的列表，注意单位是手
+          成交额:
+            type: number
+            description: 成交额的列表，注意单位是元
+          振幅:
+            type: number
+            description: 振幅的列表，注意单位是%
+          涨跌幅:
+            type: number
+            description: 涨跌幅的列表，注意单位是%
+          涨跌额:
+            type: number
+            description: 涨跌额的列表，注意单位是元
+          换手率:
+            type: number
+            description: 换手率的列表，注意单位是%

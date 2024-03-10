@@ -1,0 +1,26 @@
+[2024-03-10  17:16:22.466] wasyncore.py:485 [INFO] [log_info]: Serving on http://0.0.0.0:5003
+[2024-03-10  17:17:22.856] apiserver.py:56 [INFO] [serve_zh_stock_history_data]: ->symbol:,period:daily,start_date:20240309,end_date:20240309,adjust:
+[2024-03-10  17:17:23.134] app.py:828 [ERROR] [log_exception]: Exception on /zh_stock_history_data [GET]
+Traceback (most recent call last):
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\flask\app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\StockMarketAsisstant-master\apiserver.py", line 57, in serve_zh_stock_history_data
+    zh_stock_history_data = ak.stock_zh_a_hist(symbol=symbol,period=period,start_date=start_date,end_date=end_date,adjust=adjust)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Administrator\Desktop\codeproject\ChineseStockGPT\.venv\Lib\site-packages\akshare\stock_feature\stock_hist_em.py", line 1026, in stock_zh_a_hist
+    "secid": f"{code_id_dict[symbol]}.{symbol}",
+                ~~~~~~~~~~~~^^^^^^^^
+KeyError: ''

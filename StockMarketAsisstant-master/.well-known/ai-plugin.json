@@ -1,0 +1,18 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "StockMarketAssistant(no auth)",
+    "name_for_model": "StockMarketAssistant",
+    "description_for_human": "一个股票市场的插件，可以让chatgpt访问股票相关数据，比如股票市场数据",
+    "description_for_model": "Plugin for accessing stock related data, you can access stock history data, news data, performance data, data called by institutions, etc.",
+    "auth": {
+      "type": "none"
+    },
+    "api": {
+      "type": "openapi",
+      "url": "http://localhost:5003/openapi.yaml",
+      "is_user_authenticated": false
+    },
+    "logo_url": "http://localhost:5003/logo.png",
+    "contact_email": "zhongxingyuemail@gmail.com",
+    "legal_info_url": "http://example.com/legal"
+  }

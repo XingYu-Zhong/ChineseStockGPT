@@ -1,0 +1,23 @@
+
+
+# python cache
+__pycache__
+.pytest_cache/
+
+# python venv
+.venv
+
+# vscode configuration
+.vscode/
+
+# local data
+data/
+
+
+
+# log files
+log/
+
+# pycharm
+.idea/
+

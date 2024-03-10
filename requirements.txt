@@ -1,0 +1,9 @@
+chainlit
+openplugins
+flask
+flask-cors
+waitress
+baostock
+akshare
+colorlog
+python-dotenv
