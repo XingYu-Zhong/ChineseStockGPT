@@ -7,3 +7,16 @@ baostock
 akshare
 colorlog
 python-dotenv
+
+#stockasisstant
+flask
+flask-cors
+waitress
+baostock
+akshare
+colorlog
+#openaifunctioncall
+openai
+tenacity 
+pyyaml
+requests

@@ -2,7 +2,8 @@
 
 ## 介绍
 ChineseStockGPT是一个创新的对话式人工智能系统，专门设计用于回答与中国股市相关的问题。该系统利用Akshare获取财经数据，并采用RAG（检索增强生成）技术使GPT能够提供有关中国财经的洞察性回答。它适用于所有对中国金融市场动态感兴趣的人，从业余爱好者到严肃的投资者都能从中受益。
-
+![演示图片](image-1.png)
+![演示图片](image-2.png)
 ![演示图片](image.png)
 
 ## 目录
@@ -20,7 +21,7 @@ ChineseStockGPT是一个创新的对话式人工智能系统，专门设计用�
 在开始之前，请确保你有访问OpenAI API的必要权限。按照以下步骤设置ChineseStockGPT：
 
 1. **设置环境变量：**
-   - 转到`.env`文件并输入你的OpenAI API密钥以及你打算使用的模型。我们建议使用GPT-4.5或更高版本的模型以获得最佳性能。
+   - 转到`.env`文件并输入你的OpenAI API密钥以及你打算使用的模型。我们建议使用GPT-4-trobu或更高版本的模型以获得最佳性能。pythonpath如果本机就一个python环境，则可以跳过此步骤。否则需要填写具体python环境路径。ex:pythonpath = "C:/Users/17361/Desktop/codeproject/ChineseStockGPT/.venv/Scripts/python.exe"
 
 2. **安装依赖项：**
    - 运行以下命令安装所需的依赖项：
@@ -42,7 +43,7 @@ ChineseStockGPT是一个创新的对话式人工智能系统，专门设计用�
 
 ## 依赖项
 - Akshare：用于获取财经数据。
-- OpenAI GPT（建议使用4.5或更高版本）：用于生成基于AI的回答。
+- OpenAI GPT（建议使用4或更高版本）：用于生成基于AI的回答。
 - `requirements.txt`中列出的其他Python库。
 
 ## 特性
