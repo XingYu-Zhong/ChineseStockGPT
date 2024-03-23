@@ -28,11 +28,11 @@ paths:
   /zh_stock_history_data:
     get:
       operationId: serve_zh_stock_history_data
-      summary: 获取中国股票的历史数据,要去serve_zh_stock_basic里获取symbol,必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,振幅,涨跌幅,涨跌额,换手率等,start_date到end_date的时间超过一月period参数默认使用'weekly',超过一年period参数默认使用'monthly'
+      summary: 获取中国股票的历史数据,symbol必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,振幅,涨跌幅,涨跌额,换手率等,start_date到end_date的时间超过一月period参数默认使用'weekly',超过一年period参数默认使用'monthly'
       parameters:
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
@@ -74,7 +74,7 @@ paths:
       parameters:
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
@@ -98,7 +98,7 @@ paths:
       parameters:
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
@@ -152,7 +152,7 @@ paths:
             type: string
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,可以去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
@@ -190,11 +190,11 @@ paths:
   /zh_stock_zh_a_hist_min_em_data:
     get:
       operationId: serve_zh_stock_zh_a_hist_min_em_data
-      summary: 获取中国股票的历史分时数据,要去serve_zh_stock_basic里获取symbol,必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,最新价等,start_date到end_date的时间不能超过一天
+      summary: 获取中国股票的历史分时数据,symbol必须是纯数字,包括日期,开盘,收盘,最高,最低,成交量,成交额,最新价等,start_date到end_date的时间不能超过一天
       parameters:
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,要去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
@@ -348,7 +348,7 @@ paths:
       parameters:
         - name: symbol
           in: query
-          description: 要搜索股票代码symbol,要去serve_zh_stock_basic里获取symbol,必须是纯数字
+          description: 要搜索股票代码symbol,symbol必须是纯数字
           required: true
           schema:
             type: string
